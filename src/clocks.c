@@ -35,7 +35,7 @@ Design:
 #ifdef PERF_COUNTER
         static int64_t temp_large_integer;
 
-        #define times(t) (QueryPerformanceCounter((LARGE_INTEGER*)&temp_large_integer), temp_large_integer);
+        #define times(t) (QueryPerformanceCounter((LARGE_INTEGER*)&temp_large_integer), temp_large_integer)
 #elif TIMES
 
         #include <sys/times.h>
@@ -56,7 +56,9 @@ void lprofC_start_timer(int64_t *time_marker) {
 }
 
 static int64_t get_clocks(int64_t time_marker) {
-        return times(&t) - time_marker;
+        int64_t curTime = times(&t);
+        int64_t diff = curTime - time_marker;
+        return diff;
 }
 
 LPFLOAT lprofC_get_seconds(int64_t time_marker) {
