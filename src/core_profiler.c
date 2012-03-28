@@ -107,12 +107,7 @@ int lprofP_callhookOUT(lprofP_STATE* S) {
   info->total_time += function_call_time;
   
   source = info->file_defined;
-  if (source[0] != '@') {
-     source = "(string)";
-  }
-  else {
-     formats(source);
-  }
+  formats(source);
   name = info->function_name;
   
   if (strlen(name) > MAX_FUNCTION_NAME_LENGTH) {
