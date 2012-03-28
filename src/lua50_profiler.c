@@ -25,7 +25,7 @@ static int exit_id;
 static int profstate_id;
 
 /* Forward declaration */
-static float calcCallTime(lua_State *L);
+static LPFLOAT calcCallTime(lua_State *L);
 static int profiler_stop(lua_State *L);
 
 /* called by Lua (via the callhook mechanism) */
@@ -116,7 +116,7 @@ static int profiler_resume(lua_State *L) {
 static int profiler_init(lua_State *L) {
   lprofP_STATE* S;
   const char* outfile;
-  float function_call_time;
+  LPFLOAT function_call_time;
 
   lua_pushlightuserdata(L, &profstate_id);
   lua_gettable(L, LUA_REGISTRYINDEX);
@@ -189,8 +189,12 @@ static int profiler_stop(lua_State *L) {
 }
 
 /* calculates the approximate time Lua takes to call a function */
-static float calcCallTime(lua_State *L) {
+static LPFLOAT calcCallTime(lua_State *L) {
+#ifdef PERF_COUNTER
+  int64_t timer;
+#else
   clock_t timer;
+#endif
   char lua_code[] = "                                     \
                    function lprofT_mesure_function()    \
                    local i                              \
@@ -211,7 +215,7 @@ static float calcCallTime(lua_State *L) {
 
   lprofC_start_timer(&timer);
   luaL_dostring(L, lua_code);
-  return lprofC_get_seconds(timer) / (float) 100000;
+  return lprofC_get_seconds(timer) / (LPFLOAT) 100000;
 }
 
 static const luaL_reg prof_funcs[] = {

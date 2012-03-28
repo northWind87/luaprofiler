@@ -32,7 +32,11 @@ Design:
    note: I guess TIMES don't work for win32
 */
 
-#ifdef TIMES
+#ifdef PERF_COUNTER
+        static int64_t temp_large_integer;
+
+        #define times(t) (QueryPerformanceCounter((LARGE_INTEGER*)&temp_large_integer), temp_large_integer);
+#elif TIMES
 
         #include <sys/times.h>
 
@@ -46,7 +50,22 @@ Design:
 
 #endif
 
+#ifdef PERF_COUNTER
+void lprofC_start_timer(int64_t *time_marker) {
+        *time_marker = times(&t);
+}
 
+static int64_t get_clocks(int64_t time_marker) {
+        return times(&t) - time_marker;
+}
+
+LPFLOAT lprofC_get_seconds(int64_t time_marker) {
+int64_t clocks, clocksPerSec;
+        clocks = get_clocks(time_marker);
+        QueryPerformanceFrequency((LARGE_INTEGER*)&clocksPerSec);
+        return (LPFLOAT)clocks / (LPFLOAT)clocksPerSec;
+}
+#else
 void lprofC_start_timer(clock_t *time_marker) {
         *time_marker = times(&t);
 }
@@ -55,9 +74,9 @@ static clock_t get_clocks(clock_t time_marker) {
         return times(&t) - time_marker;
 }
 
-float lprofC_get_seconds(clock_t time_marker) {
+LPFLOAT lprofC_get_seconds(clock_t time_marker) {
 clock_t clocks;
         clocks = get_clocks(time_marker);
-        return (float)clocks / (float)CLOCKS_PER_SEC;
+        return (LPFLOAT)clocks / (LPFLOAT)CLOCKS_PER_SEC;
 }
-
+#endif

@@ -16,6 +16,7 @@ Design (using the Lua callhook mechanism) :
    'lprofP_callhookOUT'        called whenever Lua leaves a function
 *****************************************************************************/
 
+#include "lpfloat.h"
 #include "stack.h"
 
 /* computes new stack and new timer */
@@ -27,5 +28,7 @@ int  lprofP_callhookOUT(lprofP_STATE* S);
 
 /* opens the log file */
 /* returns true if the file could be opened */
-lprofP_STATE* lprofP_init_core_profiler(const char *_out_filename, int isto_printheader, float _function_call_time);
+lprofP_STATE* lprofP_init_core_profiler(const char *_out_filename, int isto_printheader, LPFLOAT _function_call_time);
 
+/* closes the log file */
+void lprofP_close_core_profiler(lprofP_STATE* S);

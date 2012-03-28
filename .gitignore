@@ -1,0 +1,15 @@
+*.user
+*Release*
+*Debug*
+*FstDbg*
+*.sdf
+*.opensdf
+*.log
+*.lse
+*.cfg
+*.dat
+*.ini
+*.suo
+*ipch*
+*.pkg
+obj

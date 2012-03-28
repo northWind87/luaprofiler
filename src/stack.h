@@ -12,20 +12,28 @@ stack.h:
 #ifndef _STACK_H
 #define _STACK_H
 
+#include "lpfloat.h"
+#include <stdint.h>
 #include <time.h>
+
 
 typedef struct lprofS_sSTACK_RECORD lprofS_STACK_RECORD;
 
 struct lprofS_sSTACK_RECORD {
+#ifdef PERF_COUNTER
+	int64_t time_marker_function_local_time;
+	int64_t time_marker_function_total_time;
+#else
 	clock_t time_marker_function_local_time;
 	clock_t time_marker_function_total_time;
+#endif
 	char *file_defined;
 	char *function_name;
 	char *source_code;        
 	long line_defined;
 	long current_line;
-	float local_time;
-	float total_time;
+	LPFLOAT local_time;
+	LPFLOAT total_time;
 	lprofS_STACK_RECORD *next;
 };
 
